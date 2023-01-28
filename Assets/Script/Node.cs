@@ -52,6 +52,17 @@ namespace MagicBoard
             if (id == 0)
                 numberText.text = $"Start";
         }
+
+        public bool HasConnectedNode()
+        {
+            return connectedNode;
+        }
+
+        public void GetConnectedNodeId(ref int id)
+        {
+            if (connectedNode == null) return;
+            id =  connectedNode.NodeId;
+        }
         
 
         #endregion

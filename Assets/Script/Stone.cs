@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace MagicBoard
 {
@@ -19,9 +20,10 @@ namespace MagicBoard
         private List<Node> _nodes = new List<Node>();
         private int _routePosition;
         private int _stoneId;
-        private int stepsToMove;
-        private int stepsDone;
-        private bool isMoving;
+        private int _stepsToMove;
+        private int _stepsDone;
+        private bool _isMoving;
+        private WaitForEndOfFrame _waitForEndOfFrame;
 
         #endregion
 
@@ -41,10 +43,24 @@ namespace MagicBoard
             currentRoute.OnSetNodesList -= SetNodesList;
         }
 
-        private void Start()
+        private void Awake()
         {
-            
+            _waitForEndOfFrame = new WaitForEndOfFrame();
         }
+
+        private void Update()
+        {
+            //Debug Only
+            if (Input.GetKeyDown(KeyCode.R) && !_isMoving)
+            {
+                _stepsToMove = Random.Range(1, 7);
+                if(_stepsDone + _stepsToMove < _nodes.Count)
+                    StartCoroutine(MoveRoutine());
+                else
+                    Debug.LogWarning($"{gameObject.name} Steps {_stepsDone + _stepsToMove} are higher than nodes");
+            }
+        }
+        
 
         #endregion
 
@@ -55,7 +71,7 @@ namespace MagicBoard
             _nodes = nodes;
         }
 
-        private bool MoveToNextNode(Vector3 nextPosition)
+        private bool MovingToNextNode(Vector3 nextPosition)
         {
             return nextPosition != (transform.position =
                 Vector3.MoveTowards(transform.position, nextPosition, speed * Time.deltaTime));
@@ -63,21 +79,35 @@ namespace MagicBoard
 
         IEnumerator MoveRoutine()
         {
-            if(isMoving) yield break;
-            isMoving = true;
+            if(_isMoving) yield break;
+            _isMoving = true;
 
-            while (stepsToMove > 0)
+            while (_stepsToMove > 0)
             {
                 _routePosition++;
                 Vector3 nextPos = _nodes[_routePosition].transform.position;
-                while (!MoveToNextNode(nextPos)) yield return null;
+                while (MovingToNextNode(nextPos)) yield return null;
 
-                yield return new WaitForEndOfFrame();
-                stepsToMove--;
-                stepsDone++;
+                yield return _waitForEndOfFrame;
+                _stepsToMove--;
+                _stepsDone++;
+            }
+            yield return _waitForEndOfFrame;
+            //Snakes & Ladders
+            if (_nodes[_routePosition].HasConnectedNode())
+            {
+                var connectedNodeId = 0;
+                _nodes[_routePosition].GetConnectedNodeId(ref connectedNodeId);
+                var nextPos = _nodes[connectedNodeId].transform.position;
+                while (MovingToNextNode(nextPos)) yield return null;
+
+                yield return _waitForEndOfFrame;
+                _stepsDone = connectedNodeId;
+                _routePosition = connectedNodeId;
             }
 
-            isMoving = false;
+            yield return _waitForEndOfFrame;
+            _isMoving = false;
         }
 
         #endregion
