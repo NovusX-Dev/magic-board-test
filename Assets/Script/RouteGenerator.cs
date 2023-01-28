@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -8,10 +9,14 @@ namespace MagicBoard
 {
     public class RouteGenerator : MonoBehaviour
     {
+        public event Action<List<Node>> OnSetNodesList; 
+
         #region Exposed_Variables
 
+        [SerializeField] private bool canDestroyRoute = false;
+
         [Header("Nodes")]
-        [SerializeField] private int nodesAmount = 101; //101 to include starting node
+        [SerializeField] private int nodesAmount = 101; 
         [SerializeField] private Transform nodesContainer = null;
         [SerializeField] private Node nodePrefab = null;
         [SerializeField] private int startToCurveId = 14;
@@ -27,20 +32,30 @@ namespace MagicBoard
 
         #region Private_Variables
 
-        private Transform[] _nodes;
         private List<Node> _nodesList = new List<Node>();
 
         #endregion
 
         #region Public_Variables
 
+        public List<Node> NodesList => _nodesList;
+
         #endregion
 
         #region Unity_Calls
 
+        private void Awake()
+        {
+            _nodesList = GetComponentsInChildren<Node>().ToList();
+            for (int i = 0; i < _nodesList.Count; i++)
+            {
+                _nodesList[i].SetNodeId(i);
+            }
+        }
+
         private void Start()
         {
-            
+            OnSetNodesList?.Invoke(_nodesList);
         }
 
         private void OnDrawGizmos()
@@ -135,7 +150,7 @@ namespace MagicBoard
         [ContextMenu("Destroy Nodes In Editor")]
         private void DestroyRouteInEditor()
         {
-            if(_nodesList.Count < 1) return;
+            if(_nodesList.Count < 1 || !canDestroyRoute) return;
             foreach (var node in _nodesList)
             {
                 DestroyImmediate(node.gameObject);

@@ -11,13 +11,13 @@ namespace MagicBoard
         #region Exposed_Variables
 
         [SerializeField] private TextMeshProUGUI numberText = null;
+        [SerializeField] private Node connectedNode;
 
         #endregion
 
         #region Private_Variables
 
         private int _nodeId;
-        private Node _connectedNode;
 
         #endregion
 
@@ -31,9 +31,9 @@ namespace MagicBoard
 
         private void OnDrawGizmos()
         {
-            if (_connectedNode == null) return;
-            var lineColor = _connectedNode.NodeId > _nodeId ? Color.blue : Color.red;
-            Debug.DrawLine(_connectedNode.transform.position, transform.position, lineColor);
+            if (connectedNode == null) return;
+            var lineColor = connectedNode.NodeId > _nodeId ? Color.blue : Color.red;
+            Debug.DrawLine(connectedNode.transform.position, transform.position, lineColor);
         }
 
         #endregion
@@ -47,6 +47,7 @@ namespace MagicBoard
         public void SetNodeId(int id)
         {
             _nodeId = id;
+            if (numberText.text != string.Empty) return;
             numberText.text = id.ToString();
             if (id == 0)
                 numberText.text = $"Start";
