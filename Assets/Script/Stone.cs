@@ -48,19 +48,6 @@ namespace MagicBoard
             _waitForEndOfFrame = new WaitForEndOfFrame();
         }
 
-        private void Update()
-        {
-            //Debug Only
-            if (Input.GetKeyDown(KeyCode.R) && !_isMoving)
-            {
-                _stepsToMove = Random.Range(1, 7);
-                if(_stepsDone + _stepsToMove < _nodes.Count)
-                    StartCoroutine(MoveRoutine());
-                else
-                    Debug.LogWarning($"{gameObject.name} Steps {_stepsDone + _stepsToMove} are higher than nodes");
-            }
-        }
-        
 
         #endregion
 
@@ -107,12 +94,29 @@ namespace MagicBoard
             }
 
             yield return _waitForEndOfFrame;
+            
+            //win condition
+            
+            //update GameManager
+            GameManager.Instance.SetState(GameManager.States.SwitchPlayer);
             _isMoving = false;
         }
 
         #endregion
 
         #region Public_Methods
+
+        public void PlayTurn(int steps)
+        {
+            _stepsToMove = steps;
+             if(_stepsDone + _stepsToMove < _nodes.Count)
+                 StartCoroutine(MoveRoutine());
+             else
+             {
+                 Debug.LogWarning($"{gameObject.name} Steps {_stepsDone + _stepsToMove} are higher than nodes");
+                 GameManager.Instance.SetState(GameManager.States.SwitchPlayer);
+             }
+        }
 
         #endregion
 
