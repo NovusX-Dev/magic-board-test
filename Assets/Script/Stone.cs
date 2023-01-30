@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace MagicBoard
@@ -10,7 +11,8 @@ namespace MagicBoard
     {
         #region Exposed_Variables
 
-        [SerializeField] private float speed = 8f;
+        [FormerlySerializedAs("speed")] [SerializeField] private float straightSpeed = 8f;
+        [SerializeField] private float arcSpeed = 2.5f;
         [SerializeField] private RouteGenerator currentRoute = null; //to be changed later
 
         #endregion
@@ -22,6 +24,8 @@ namespace MagicBoard
         private int _stoneId;
         private int _stepsToMove;
         private int _stepsDone;
+        private float _arcTime = 0f;
+        private float _arcHeight = 0.5f;
         private bool _isMoving;
         private WaitForEndOfFrame _waitForEndOfFrame;
 
@@ -61,7 +65,15 @@ namespace MagicBoard
         private bool MovingToNextNode(Vector3 nextPosition)
         {
             return nextPosition != (transform.position =
-                Vector3.MoveTowards(transform.position, nextPosition, speed * Time.deltaTime));
+                Vector3.MoveTowards(transform.position, nextPosition, straightSpeed * Time.deltaTime));
+        }
+
+        private bool MoveInArcToNextNode(Vector3 startPos, Vector3 nextPos, float speed)
+        {
+            _arcTime += speed * Time.deltaTime;
+            var arcPosition = Vector3.Lerp(startPos, nextPos, _arcTime);
+            arcPosition.y += _arcHeight * Mathf.Sin(Mathf.Clamp01(_arcTime) * Mathf.PI);
+            return nextPos != (transform.position = Vector3.Lerp(transform.position, arcPosition, _arcTime));
         }
 
         IEnumerator MoveRoutine()
@@ -73,9 +85,11 @@ namespace MagicBoard
             {
                 _routePosition++;
                 Vector3 nextPos = _nodes[_routePosition].transform.position;
-                while (MovingToNextNode(nextPos)) yield return null;
+                var startPos =_nodes[_routePosition - 1].transform.position;
+                while (MoveInArcToNextNode(startPos, nextPos, arcSpeed)) yield return  null;
 
                 yield return _waitForEndOfFrame;
+                _arcTime = 0f;
                 _stepsToMove--;
                 _stepsDone++;
             }

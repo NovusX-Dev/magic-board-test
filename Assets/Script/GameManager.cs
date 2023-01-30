@@ -70,7 +70,29 @@ namespace MagicBoard
                         break;
                 }
             }
+            
+            if (players[_activePlayer].type == Player.PlayerTypes.Human)
+            {
+                switch (currentState)
+                {
+                    case States.Waiting:
+
+                        break;
+                    
+                    case States.RollDice:
+                        UiManager.Instance.ActivateDiceButton(true);
+                        currentState = States.Waiting;
+                        break;
+                    
+                    case States.SwitchPlayer:
+                        _activePlayer++;
+                        _activePlayer %= players.Count;
+                        currentState = States.RollDice;
+                        break;
+                }
+            }
         }
+        
 
         #endregion
 
@@ -92,6 +114,11 @@ namespace MagicBoard
         public void SetState(States state)
         {
             currentState = state;
+        }
+
+        public void HumanRollDice()
+        {
+            StartCoroutine(RollDiceRoutine());
         }
 
         #endregion
