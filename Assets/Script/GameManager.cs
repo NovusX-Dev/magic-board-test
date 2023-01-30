@@ -10,7 +10,6 @@ namespace MagicBoard
     public class Player
     {
         public string playerName;
-        public string playerId;
         public Stone currentStone;
         public PlayerTypes type;
         
@@ -65,7 +64,9 @@ namespace MagicBoard
                         break;
                     
                     case States.SwitchPlayer:
-
+                        _activePlayer++;
+                        _activePlayer %= players.Count;
+                        currentState = States.RollDice;
                         break;
                 }
             }
