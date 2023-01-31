@@ -26,6 +26,7 @@ namespace MagicBoard
 
         #region Exposed_Variables
 
+        [SerializeField] private Dice dice = null;
         [SerializeField] private List<Player> players = new List<Player>();
         [SerializeField] private States currentState;
 
@@ -101,10 +102,7 @@ namespace MagicBoard
         IEnumerator RollDiceRoutine()
         {
             yield return new WaitForSeconds(rollDiceWaitTime);
-            _rolledDiceNumber = Random.Range(1, 7);
-            
-            //New Turn
-            players[_activePlayer].currentStone.PlayTurn(_rolledDiceNumber);
+            dice.RollDice();
         }
 
         #endregion
@@ -119,6 +117,12 @@ namespace MagicBoard
         public void HumanRollDice()
         {
             StartCoroutine(RollDiceRoutine());
+        }
+
+        public void DiceFinishedRolling(int value)
+        {
+            _rolledDiceNumber = value;
+            players[_activePlayer].currentStone.PlayTurn(_rolledDiceNumber);
         }
 
         #endregion
