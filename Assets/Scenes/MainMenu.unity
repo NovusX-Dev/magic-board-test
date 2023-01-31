@@ -2182,6 +2182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d23b58096214dbabb342da6d5b60eb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boardScene: Board
   redToggle:
     cpu: {fileID: 385221551}
     human: {fileID: 1402290718}

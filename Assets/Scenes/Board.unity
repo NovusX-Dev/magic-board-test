@@ -30194,19 +30194,19 @@ MonoBehaviour:
   - playerName: Red
     currentStone: {fileID: 4506154638330920716}
     type: 0
-    playerColor: {r: 0, g: 0, b: 0, a: 0}
+    playerColor: {r: 1, g: 0, b: 0, a: 1}
   - playerName: Blue
     currentStone: {fileID: 1114956802}
     type: 0
-    playerColor: {r: 0, g: 0, b: 0, a: 0}
+    playerColor: {r: 0, g: 0.5179992, b: 1, a: 1}
   - playerName: Green
     currentStone: {fileID: 337452352}
     type: 0
-    playerColor: {r: 0, g: 0, b: 0, a: 0}
+    playerColor: {r: 0.3491094, g: 1, b: 0, a: 1}
   - playerName: Yellow
     currentStone: {fileID: 2076870253}
     type: 0
-    playerColor: {r: 0, g: 0, b: 0, a: 0}
+    playerColor: {r: 1, g: 0.87176263, b: 0, a: 1}
   currentState: 1
   rollDiceWaitTime: 1.5
 --- !u!4 &1609183564
@@ -38619,7 +38619,7 @@ PrefabInstance:
     - target: {fileID: 5396162079619932776, guid: 0c8f3e015c9e4094fb737decfa7bd2d9,
         type: 3}
       propertyPath: m_Name
-      value: Gold Stone
+      value: Yellow Stone
       objectReference: {fileID: 0}
     - target: {fileID: 5900833313408566205, guid: 0c8f3e015c9e4094fb737decfa7bd2d9,
         type: 3}

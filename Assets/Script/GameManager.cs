@@ -51,8 +51,9 @@ namespace MagicBoard
 
         #region Unity_Calls
 
-        private void Awake()
+        public override void Init()
         {
+            base.Init();
             for (int i = 0; i < players.Count; i++)
             {
                 if (StartSettings.Players[i] == StartSettings.Cpu)
@@ -72,7 +73,7 @@ namespace MagicBoard
 
             _totalTurnsPlayed = 0;
             _activePlayer = Random.Range(0, players.Count);
-            UiManager.Instance.UpdateInfoText($"{players[_activePlayer].playerName}'s Turn!");
+            UiManager.Instance.UpdateInfoText($"{players[_activePlayer].playerName}'s Turn!", players[_activePlayer].playerColor);
         }
 
         private void Update()
@@ -124,7 +125,7 @@ namespace MagicBoard
         {
             _activePlayer++;
             _activePlayer %= players.Count;
-            UiManager.Instance.UpdateInfoText($"{players[_activePlayer].playerName}'s Turn!");
+            UiManager.Instance.UpdateInfoText($"{players[_activePlayer].playerName}'s Turn!", players[_activePlayer].playerColor);
             _totalTurnsPlayed++;
             currentState = States.RollDice;
         }
@@ -154,7 +155,7 @@ namespace MagicBoard
             _rolledDiceNumber = value;
             players[_activePlayer].currentStone.PlayTurn(_rolledDiceNumber);
             var infoText = $"{players[_activePlayer].playerName} rolled {_rolledDiceNumber.ToString()}";
-            UiManager.Instance.UpdateInfoText(infoText);
+            UiManager.Instance.UpdateInfoText(infoText, players[_activePlayer].playerColor);
         }
 
         public void GameWon(Stone winner)

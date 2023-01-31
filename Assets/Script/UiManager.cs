@@ -57,9 +57,10 @@ namespace MagicBoard
             rollDiceButton.gameObject.SetActive(false);
         }
 
-        public void UpdateInfoText(string text)
+        public void UpdateInfoText(string text, Color playerColor)
         {
             infoText.text = text;
+            infoText.color = playerColor;
         }
 
         public void GameWonPanel(string playerName, Color playerColor, int totalTurns)
@@ -74,7 +75,6 @@ namespace MagicBoard
         {
             SceneManager.LoadScene(mainMenuScene);
         }
-        
 
         #endregion
 
