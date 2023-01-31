@@ -11,8 +11,9 @@ namespace MagicBoard
     {
         #region Exposed_Variables
 
-        [FormerlySerializedAs("speed")] [SerializeField] private float straightSpeed = 8f;
+        [SerializeField] private float straightSpeed = 8f;
         [SerializeField] private float arcSpeed = 2.5f;
+        [SerializeField] private float endTurnWaitTime = 0.5f;
         [SerializeField] private RouteGenerator currentRoute = null; //to be changed later
 
         #endregion
@@ -28,6 +29,7 @@ namespace MagicBoard
         private float _arcHeight = 0.5f;
         private bool _isMoving;
         private WaitForEndOfFrame _waitForEndOfFrame;
+        private WaitForSeconds _waitAfterMove;
 
         #endregion
 
@@ -50,8 +52,8 @@ namespace MagicBoard
         private void Awake()
         {
             _waitForEndOfFrame = new WaitForEndOfFrame();
+            _waitAfterMove = new WaitForSeconds(endTurnWaitTime);
         }
-
 
         #endregion
 
@@ -110,12 +112,11 @@ namespace MagicBoard
             }
             
             _nodes[_routePosition].AddStone(this);
-            yield return _waitForEndOfFrame;
+            yield return _waitAfterMove;
             
-            //win condition
-
             if (_stepsDone == _nodes.Count - 1)
             {
+                //Win
                 GameManager.Instance.GameWon(this);
                 yield break;
             }

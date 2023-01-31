@@ -29849,7 +29849,7 @@ MonoBehaviour:
     currentStone: {fileID: 2076870253}
     type: 0
   currentState: 1
-  rollDiceWaitTime: 2
+  rollDiceWaitTime: 1.5
 --- !u!4 &1609183564
 Transform:
   m_ObjectHideFlags: 0

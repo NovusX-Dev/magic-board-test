@@ -55,6 +55,9 @@ namespace MagicBoard
             {
                 player.playerName = player.currentStone.gameObject.name;
             }
+
+            _activePlayer = Random.Range(0, players.Count);
+            UiManager.Instance.UpdateInfoText($"{players[_activePlayer].playerName}'s Turn!");
         }
 
         private void Update()
