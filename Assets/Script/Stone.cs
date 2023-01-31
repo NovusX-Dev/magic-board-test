@@ -80,7 +80,8 @@ namespace MagicBoard
         {
             if(_isMoving) yield break;
             _isMoving = true;
-
+            _nodes[_routePosition].RemoveStone(this);
+            
             while (_stepsToMove > 0)
             {
                 _routePosition++;
@@ -93,6 +94,7 @@ namespace MagicBoard
                 _stepsToMove--;
                 _stepsDone++;
             }
+            
             yield return _waitForEndOfFrame;
             //Snakes & Ladders
             if (_nodes[_routePosition].HasConnectedNode())
@@ -106,7 +108,8 @@ namespace MagicBoard
                 _stepsDone = connectedNodeId;
                 _routePosition = connectedNodeId;
             }
-
+            
+            _nodes[_routePosition].AddStone(this);
             yield return _waitForEndOfFrame;
             
             //win condition
