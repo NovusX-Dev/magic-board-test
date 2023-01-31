@@ -49,6 +49,14 @@ namespace MagicBoard
 
         #region Unity_Calls
 
+        private void Start()
+        {
+            foreach (var player in players)
+            {
+                player.playerName = player.currentStone.gameObject.name;
+            }
+        }
+
         private void Update()
         {
             if (players[_activePlayer].type == Player.PlayerTypes.CPU)
@@ -65,9 +73,7 @@ namespace MagicBoard
                         break;
                     
                     case States.SwitchPlayer:
-                        _activePlayer++;
-                        _activePlayer %= players.Count;
-                        currentState = States.RollDice;
+                        SwitchPlayerState();
                         break;
                 }
             }
@@ -86,9 +92,7 @@ namespace MagicBoard
                         break;
                     
                     case States.SwitchPlayer:
-                        _activePlayer++;
-                        _activePlayer %= players.Count;
-                        currentState = States.RollDice;
+                        SwitchPlayerState();
                         break;
                 }
             }
@@ -98,6 +102,14 @@ namespace MagicBoard
         #endregion
 
         #region Private_Methods
+
+        private void SwitchPlayerState()
+        {
+            _activePlayer++;
+            _activePlayer %= players.Count;
+            UiManager.Instance.UpdateInfoText($"{players[_activePlayer].playerName}'s Turn!");
+            currentState = States.RollDice;
+        }
 
         IEnumerator RollDiceRoutine()
         {
@@ -123,6 +135,13 @@ namespace MagicBoard
         {
             _rolledDiceNumber = value;
             players[_activePlayer].currentStone.PlayTurn(_rolledDiceNumber);
+            var infoText = $"{players[_activePlayer].playerName} rolled {_rolledDiceNumber.ToString()}";
+            UiManager.Instance.UpdateInfoText(infoText);
+        }
+
+        public void GameWon(Stone winner)
+        {
+            Debug.Log($"Winner is {winner.gameObject.name}");
         }
 
         #endregion

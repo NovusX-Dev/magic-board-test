@@ -113,8 +113,13 @@ namespace MagicBoard
             yield return _waitForEndOfFrame;
             
             //win condition
+
+            if (_stepsDone == _nodes.Count - 1)
+            {
+                GameManager.Instance.GameWon(this);
+                yield break;
+            }
             
-            //update GameManager
             GameManager.Instance.SetState(GameManager.States.SwitchPlayer);
             _isMoving = false;
         }

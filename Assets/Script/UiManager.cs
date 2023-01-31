@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace MagicBoard
@@ -8,7 +10,8 @@ namespace MagicBoard
         #region Exposed_Variables
 
         [SerializeField] private Button rollDiceButton;
-
+        [SerializeField] private TextMeshProUGUI infoText = null;
+        
         #endregion
 
         #region Private_Variables
@@ -20,6 +23,11 @@ namespace MagicBoard
         #endregion
 
         #region Unity_Calls
+
+        private void Start()
+        {
+            infoText.text = "Are you lucky enough to win?";
+        }
 
         #endregion
 
@@ -38,6 +46,11 @@ namespace MagicBoard
         {
             GameManager.Instance.HumanRollDice();
             ActivateDiceButton(false);
+        }
+
+        public void UpdateInfoText(string text)
+        {
+            infoText.text = text;
         }
         
 
