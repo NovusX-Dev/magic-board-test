@@ -38,6 +38,7 @@ namespace MagicBoard
         {
             infoText.text = "Are you lucky enough to win?";
             winPanel.SetActive(false);
+            SetSpeed(1);
         }
 
         #endregion
@@ -94,6 +95,11 @@ namespace MagicBoard
         public void UpdateTurns(int turns)
         {
             turnsText.text = $"Turns Played: {turns.ToString()}";
+        }
+
+        public void SetSpeed(int speed)
+        {
+            Time.timeScale = speed;
         }
 
         #endregion

@@ -150,6 +150,7 @@ namespace MagicBoard
             //check luck
             if (_luckyTurn == _totalTurnsPlayed) _gotLucky = true;
             yield return new WaitForSeconds(rollDiceWaitTime);
+            dice.SetScale(_gotLucky);
             dice.RollDice();
         }
 

@@ -116,6 +116,11 @@ namespace MagicBoard
             }
         }
 
+        public void SetScale(bool lucky)
+        {
+            transform.localScale = lucky ? transform.localScale = Vector3.one * 2.5f : Vector3.one;
+        }
+
         #endregion
 
 
