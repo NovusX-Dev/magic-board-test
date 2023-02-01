@@ -27,10 +27,15 @@ namespace MagicBoard
     {
         #region Exposed_Variables
 
-        [SerializeField] private Dice dice = null;
         [SerializeField] private List<Player> players = new List<Player>();
         [SerializeField] private States currentState;
-
+        
+        [Header("Dices")]
+        [SerializeField] private Dice dice = null;
+        [SerializeField] private int minLuck = 1;
+        [SerializeField] private int maxLuck = 6;
+        
+        
         [Header("Delays")] 
         [SerializeField] private float rollDiceWaitTime = 2f;
         #endregion
@@ -40,6 +45,8 @@ namespace MagicBoard
         private int _activePlayer;
         private int _rolledDiceNumber;
         private int _totalTurnsPlayed;
+        private int _luckyTurn;
+        private bool _gotLucky = false;
 
         #endregion
 
@@ -72,6 +79,8 @@ namespace MagicBoard
             }
 
             _totalTurnsPlayed = 0;
+            UiManager.Instance.UpdateTurns(_totalTurnsPlayed);
+            _luckyTurn = Random.Range(minLuck, maxLuck);
             _activePlayer = Random.Range(0, players.Count);
             UiManager.Instance.UpdateInfoText($"{players[_activePlayer].playerName}'s Turn!", players[_activePlayer].playerColor);
         }
@@ -127,11 +136,19 @@ namespace MagicBoard
             _activePlayer %= players.Count;
             UiManager.Instance.UpdateInfoText($"{players[_activePlayer].playerName}'s Turn!", players[_activePlayer].playerColor);
             _totalTurnsPlayed++;
+            UiManager.Instance.UpdateTurns(_totalTurnsPlayed);
+            if (_gotLucky)
+            {
+                _luckyTurn = Random.Range(minLuck, maxLuck) + _totalTurnsPlayed;
+                _gotLucky = false;
+            }
             currentState = States.RollDice;
         }
 
         IEnumerator RollDiceRoutine()
         {
+            //check luck
+            if (_luckyTurn == _totalTurnsPlayed) _gotLucky = true;
             yield return new WaitForSeconds(rollDiceWaitTime);
             dice.RollDice();
         }
@@ -152,10 +169,12 @@ namespace MagicBoard
 
         public void DiceFinishedRolling(int value)
         {
-            _rolledDiceNumber = value;
+            _rolledDiceNumber = _gotLucky ? value * 2 : value;
             players[_activePlayer].currentStone.PlayTurn(_rolledDiceNumber);
             var infoText = $"{players[_activePlayer].playerName} rolled {_rolledDiceNumber.ToString()}";
             UiManager.Instance.UpdateInfoText(infoText, players[_activePlayer].playerColor);
+            if(_gotLucky)
+                UiManager.Instance.GotLucky(players[_activePlayer].playerColor);
         }
 
         public void GameWon(Stone winner)

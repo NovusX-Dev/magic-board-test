@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,7 +13,9 @@ namespace MagicBoard
 
         [SerializeField] private Button rollDiceButton;
         [SerializeField] private TextMeshProUGUI infoText = null;
-
+        [SerializeField] private TextMeshProUGUI luckText = null;
+        [SerializeField] private TextMeshProUGUI turnsText = null;
+        
         [Header("Win Panel")] 
         [SerializeField] private GameObject winPanel = null;
         [SerializeField] private TextMeshProUGUI winnerText = null;
@@ -74,6 +77,23 @@ namespace MagicBoard
         public void OnGoBackToMenu()
         {
             SceneManager.LoadScene(mainMenuScene);
+        }
+
+        public void GotLucky(Color playerColor)
+        {
+            StartCoroutine(LuckRoutine());
+            IEnumerator LuckRoutine()
+            {
+                luckText.gameObject.SetActive(true);
+                luckText.color = playerColor;
+                yield return new WaitForSeconds(1.5f);
+                luckText.gameObject.SetActive(false);
+            }
+        }
+
+        public void UpdateTurns(int turns)
+        {
+            turnsText.text = $"Turns Played: {turns.ToString()}";
         }
 
         #endregion
