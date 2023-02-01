@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxTorque: 500
+  rollClip: {fileID: 8300000, guid: 32a5272a1080890418762e4fbeb0831f, type: 3}
   diceSides:
   - {fileID: 9078997515320268194}
   - {fileID: 9078997514574059403}

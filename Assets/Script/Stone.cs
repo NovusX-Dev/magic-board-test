@@ -14,7 +14,10 @@ namespace MagicBoard
         [SerializeField] private float straightSpeed = 8f;
         [SerializeField] private float arcSpeed = 2.5f;
         [SerializeField] private float endTurnWaitTime = 0.5f;
-        [SerializeField] private RouteGenerator currentRoute = null; //to be changed later
+        [SerializeField] private RouteGenerator currentRoute = null;
+        [SerializeField] private AudioClip hopClip = null;
+        [SerializeField] private AudioClip snakeClip = null;
+        [SerializeField] private AudioClip ladderClip = null;
 
         #endregion
 
@@ -92,6 +95,8 @@ namespace MagicBoard
                 while (MoveInArcToNextNode(startPos, nextPos, arcSpeed)) yield return  null;
 
                 yield return _waitForEndOfFrame;
+                AudioManager.Instance.PlaySfx(hopClip);
+
                 _arcTime = 0f;
                 _stepsToMove--;
                 _stepsDone++;
@@ -107,6 +112,7 @@ namespace MagicBoard
                 while (MovingToNextNode(nextPos)) yield return null;
 
                 yield return _waitForEndOfFrame;
+                AudioManager.Instance.PlaySfx(_routePosition > connectedNodeId ? ladderClip : snakeClip);
                 _stepsDone = connectedNodeId;
                 _routePosition = connectedNodeId;
             }

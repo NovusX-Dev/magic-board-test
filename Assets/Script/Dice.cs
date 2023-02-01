@@ -9,6 +9,7 @@ namespace MagicBoard
         #region Exposed_Variables
 
         [SerializeField] private int maxTorque = 500;
+        [SerializeField] private AudioClip rollClip;
         [SerializeField] private DiceSide[] diceSides;
 
         #endregion
@@ -103,6 +104,7 @@ namespace MagicBoard
 
         public void RollDice()
         {
+            AudioManager.Instance.PlaySfx(rollClip);
             ResetDice();
             if (!_rolled && !_hasLanded)
             {

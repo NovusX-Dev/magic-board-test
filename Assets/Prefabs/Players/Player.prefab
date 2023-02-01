@@ -98,4 +98,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   straightSpeed: 8
   arcSpeed: 4
+  endTurnWaitTime: 0.5
   currentRoute: {fileID: 0}
+  hopClip: {fileID: 8300000, guid: 655e1e6e3bcc92f4c97fed8a11b090ed, type: 3}
+  snakeClip: {fileID: 8300000, guid: bbea4e26a0b766c4982efbe0f6cbedd6, type: 3}
+  ladderClip: {fileID: 8300000, guid: c864f63af6d62874c907a2fa3e0c7d57, type: 3}
