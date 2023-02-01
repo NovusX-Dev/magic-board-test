@@ -78,10 +78,11 @@ namespace MagicBoard
                 player.playerName = player.currentStone.gameObject.name;
             }
 
-            _totalTurnsPlayed = 0;
-            UiManager.Instance.UpdateTurns(_totalTurnsPlayed);
+            _totalTurnsPlayed = 1;
             _luckyTurn = Random.Range(minLuck, maxLuck);
             _activePlayer = Random.Range(0, players.Count);
+            
+            UiManager.Instance.UpdateTotalTurns(_totalTurnsPlayed);
             UiManager.Instance.UpdateInfoText($"{players[_activePlayer].playerName}'s Turn!", players[_activePlayer].playerColor);
         }
 
@@ -134,14 +135,15 @@ namespace MagicBoard
         {
             _activePlayer++;
             _activePlayer %= players.Count;
-            UiManager.Instance.UpdateInfoText($"{players[_activePlayer].playerName}'s Turn!", players[_activePlayer].playerColor);
             _totalTurnsPlayed++;
-            UiManager.Instance.UpdateTurns(_totalTurnsPlayed);
             if (_gotLucky)
             {
                 _luckyTurn = Random.Range(minLuck, maxLuck) + _totalTurnsPlayed;
                 _gotLucky = false;
             }
+            
+            UiManager.Instance.UpdateInfoText($"{players[_activePlayer].playerName}'s Turn!", players[_activePlayer].playerColor);
+            UiManager.Instance.UpdateTotalTurns(_totalTurnsPlayed);
             currentState = States.RollDice;
         }
 
@@ -186,7 +188,7 @@ namespace MagicBoard
                 winnerPlayer = player;
                 break;
             }
-            UiManager.Instance.GameWonPanel(winnerPlayer.playerName, winnerPlayer.playerColor, _totalTurnsPlayed );
+            UiManager.Instance.GameWonPanel(winnerPlayer.playerName, winnerPlayer.playerColor);
         }
 
         #endregion

@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace MagicBoard
@@ -14,18 +15,22 @@ namespace MagicBoard
         [SerializeField] private Button rollDiceButton;
         [SerializeField] private TextMeshProUGUI infoText = null;
         [SerializeField] private TextMeshProUGUI luckText = null;
-        [SerializeField] private TextMeshProUGUI turnsText = null;
+        [SerializeField] private TextMeshProUGUI infoTurnsText = null;
+        [SerializeField] private TextMeshProUGUI menuTotalTurnsText = null;
         
         [Header("Win Panel")] 
         [SerializeField] private GameObject winPanel = null;
         [SerializeField] private TextMeshProUGUI winnerText = null;
-        [SerializeField] private TextMeshProUGUI totalTurnsText = null;
+        [SerializeField] private TextMeshProUGUI winTotalTurnsText = null;
         [SerializeField] private string mainMenuScene = "";
         
         #endregion
 
         #region Private_Variables
 
+        private int _totalTurns = 0;
+        private float _gameSpeed;
+        
         #endregion
 
         #region Public_Variables
@@ -67,13 +72,21 @@ namespace MagicBoard
             infoText.color = playerColor;
         }
 
-        public void GameWonPanel(string playerName, Color playerColor, int totalTurns)
+        public void GameWonPanel(string playerName, Color playerColor)
         {
             winPanel.SetActive(true);
             winnerText.text = playerName;
             winnerText.color = playerColor;
-            totalTurnsText.text = $"Total Turns Played: {totalTurns.ToString()}";
         }
+
+        public void UpdateTotalTurns(int turns)
+        {
+            _totalTurns = turns;
+            winTotalTurnsText.text = $"Total Turns Played: {_totalTurns.ToString()}";
+            menuTotalTurnsText.text = $"Total Turns Played: {_totalTurns.ToString()}";
+            infoTurnsText.text = $"Turns Played: {_totalTurns.ToString()}";
+        }
+        
 
         public void OnGoBackToMenu()
         {
@@ -92,14 +105,25 @@ namespace MagicBoard
             }
         }
 
-        public void UpdateTurns(int turns)
+        public void SetSpeed(float speed)
         {
-            turnsText.text = $"Turns Played: {turns.ToString()}";
+            _gameSpeed = speed;
+            Time.timeScale = speed;
         }
 
-        public void SetSpeed(int speed)
+        public void StopGame()
         {
-            Time.timeScale = speed;
+            StartCoroutine(StopRoutine());
+            IEnumerator StopRoutine()
+            {
+                yield return new WaitForSeconds(1.5f);
+                Time.timeScale = 0f;
+            }
+        }
+
+        public void ResumeGame()
+        {
+            Time.timeScale = _gameSpeed;
         }
 
         #endregion
